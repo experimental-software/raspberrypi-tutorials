@@ -1,5 +1,5 @@
 
-= Installing Raspbian on Linux
+= Installing Raspbian via Linux
 
 This section contains a description for installing https://en.wikipedia.org/wiki/Raspbian[Rasbian] on a micro SD card using with a Linux computer, using the https://en.wikipedia.org/wiki/Command-line_interface[commandline interface].
 

@@ -1,4 +1,5 @@
 = Getting started
 
-
 include::download-ubuntu.adocs[]
+
+include::download-windows.adocs[]
