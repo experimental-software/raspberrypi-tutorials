@@ -1,0 +1,237 @@
+= Parsing information from a website
+:icons: font
+:source-highlighter: rouge
+
+WARNING: With great power comes great responsibility. Respect the digital property of others.
+
+== Introduction
+
+Usually, websites are visited with the help of web browers.
+However, also computer programs can do the same.
+This is useful for data aggregation.
+One example where this is being used is for indexing websites in search engines.
+
+== Dependencies
+
+The following Python libraries need to be installed to be able to execute the code described below.
+
+[source, bash]
+----
+pip3 install beautifulsoup4
+pip3 install requests
+----
+
+== Accessing websites
+
+The Python library https://requests.readthedocs.io/en/master/[Requests] makes it relatively easy to open websites with Python, like the user would normally do with the browser.
+
+[source, python]
+----
+>>> import requests
+
+>>> # Execute a HTTP GET request for the homepage of the Kirpal Sagar Academy
+>>> response = requests.get('http://kirpalsagaracademy.com/')
+
+>>> # Every HTTP response has a status code indicating success or failure <1>
+>>> response.status_code
+200
+
+>>> # Response headers give hints how to interpret the data in the response body
+>>> response.headers['Content-Type']
+'text/html; charset=UTF-8'
+
+>>> # Like this we can get access on the acutal source code of the website
+>>> response.text
+
+----
+<1> See https://www.restapitutorial.com/httpstatuscodes.html for details
+
+== Parsing HTML
+
+The Python library https://www.crummy.com/software/BeautifulSoup/bs4/doc/[BeautifulSoup] makes is relatively easy to read in and decompose HTML documents.
+
+[source, python]
+----
+>>> from bs4 import BeautifulSoup
+
+>>> # Create object which provides access on the HTML elements
+>>> soup = BeautifulSoup(response.text, 'html.parser')
+
+>>> # Get access on the text in the "title" element of the website
+>>> soup.title.text
+'Kirpal Sagar Academy'
+
+>>> # Get access on all anchor elements of the website
+>>> soup.find_all('a')
+
+>>> # Get access on the value of the "href" attribute of the fourth element
+>>> # in the list of all anchors elements of the website
+>>> soup.find_all('a')[3]['href']
+'4040000000.html'
+----
+
+=== CSS selectors
+
+https://www.w3schools.com/cssref/css_selectors.asp[CSS selectors] are primarily used to instruct the web browsers for each and every HTML how the could display it, e.g. that all links in the navigation section should be displayed with a blue background color and with font size 12.
+However, they can also be used to locate elements from which we want to extract data.
+
+[source, python]
+----
+>>> soup.select('div.marketing span')[0].text # <1>
+'Registration & Admission Open'
+----
+<1> Get access on the text of the first element which will be addressed with a CSS selector for the "span" elements nested within "div" elements with the "class" attribute  "marketing".
+
+== Complete example
+
+So, now let us have a look at a script which makes use of the puzzle pieces described above.
+It will open the event overview page of the Kirpal Sagar Academy website and extract a summary of all the events listed there.
+
+.parse_ksa_events.py
+[source,python]
+----
+include::website-parser/parse_ksa_events.py[]
+----
+<1> Here we collect the event details for later formatting and printing to the output device
+<2> Another feature of BeautifulSoup is that it provides access on the parent of a HTML element, i.e. the element in which it is contained. And also the parent element of the parent element.
+<3> https://en.wikipedia.org/wiki/JSON[JSON] is a common format in which one program passes data over to another
+
+This script can be called as any other Python script.
+
+[source, bash]
+----
+python3 parse_ksa_events.py
+----
+
+With the data extracted from the website we could now create a new website which displays a tables with links to past events in the Kirpal Sagar Academy.
+
+[source, json]
+----
+[
+  {
+    "link": "http://kirpalsagaracademy.com/40500000003142.html",
+    "date": "17-11-2019",
+    "title": "Annual Day Celebrations 2019"
+  },
+  {
+    "link": "http://kirpalsagaracademy.com/40500000003021.html",
+    "date": "25-10-2019",
+    "title": "Annual Sports Meet"
+  },
+  {
+    "link": "http://kirpalsagaracademy.com/40500000003004.html",
+    "date": "21-09-2019",
+    "title": "Cross country race"
+  },
+  {
+    "link": "http://kirpalsagaracademy.com/40500000002997.html",
+    "date": "02-10-2019",
+    "title": "Gandhi Jayanti"
+  },
+  {
+    "link": "http://kirpalsagaracademy.com/40500000002990.html",
+    "date": "05-09-2019",
+    "title": "Teachers\u2019 Day Celebrations"
+  },
+  {
+    "link": "http://kirpalsagaracademy.com/40500000002975.html",
+    "date": "18-05-2019",
+    "title": "nvestiture Ceremony"
+  },
+  {
+    "link": "http://kirpalsagaracademy.com/40500000002967.html",
+    "date": "18-05-2019",
+    "title": "The Ballet is stronger than the Bullet"
+  },
+  {
+    "link": "http://kirpalsagaracademy.com/40500000002772.html",
+    "date": "22-04-2019",
+    "title": "The Earth Day 2019 Celebrations"
+  },
+  {
+    "link": "http://kirpalsagaracademy.com/40500000001199.html",
+    "date": "22/04/2018",
+    "title": "Report on Earth Day Celebrations @ Kirpal Sagar Academy"
+  },
+  {
+    "link": "http://kirpalsagaracademy.com/40500000001062.html",
+    "date": "05/08/2017",
+    "title": "Elocution Hindi"
+  },
+  {
+    "link": "http://kirpalsagaracademy.com/40500000001041.html",
+    "date": "01/08/2017",
+    "title": "English Elocution VI \u2013 VIII"
+  },
+  {
+    "link": "http://kirpalsagaracademy.com/4050000000848.html",
+    "date": "06/05/2017",
+    "title": "Inter- House Throw ball Tournament"
+  },
+  {
+    "link": "http://kirpalsagaracademy.com/4050000000779.html",
+    "date": "23/11/2016",
+    "title": "The Annual Athletic Meet"
+  },
+  {
+    "link": "http://kirpalsagaracademy.com/4050000000738.html",
+    "date": "19/08/2016",
+    "title": "\u2018ARPAN\u2019 -  HOUSE SHOW, 2016"
+  },
+  {
+    "link": "http://kirpalsagaracademy.com/4050000000706.html",
+    "date": "27/07/2016",
+    "title": "Eco Club"
+  },
+  {
+    "link": "http://kirpalsagaracademy.com/4050000000667.html",
+    "date": "16/05/2016",
+    "title": "Investiture Ceremony"
+  },
+  {
+    "link": "http://kirpalsagaracademy.com/4050000000624.html",
+    "date": "22/04/2016",
+    "title": "Inter House Competition 2016-17"
+  },
+  {
+    "link": "http://kirpalsagaracademy.com/4050000000623.html",
+    "date": "22/04/2016",
+    "title": "World Earth Day Celebration"
+  },
+  {
+    "link": "http://kirpalsagaracademy.com/4050000000475.html",
+    "date": "May 26, 2015",
+    "title": "FRESHERS' NIGHT 2015"
+  },
+  {
+    "link": "http://kirpalsagaracademy.com/4050000000474.html",
+    "date": "Aug 15, 2015",
+    "title": "Independence Day Celebration 2015"
+  },
+  {
+    "link": "http://kirpalsagaracademy.com/4050000000472.html",
+    "date": "Aug 24, 2015",
+    "title": "Story Telling Nursery-Grade-II"
+  },
+  {
+    "link": "http://kirpalsagaracademy.com/4050000000471.html",
+    "date": "Aug 24, 2015",
+    "title": "Poetry Recitation (Hindi and English)"
+  },
+  {
+    "link": "http://kirpalsagaracademy.com/4050000000400.html",
+    "date": "Oct 22, 2015",
+    "title": "Dussehra Celebrations"
+  },
+  {
+    "link": "http://kirpalsagaracademy.com/4050000000117.html",
+    "date": "Oct 1, 2015",
+    "title": "Tour & Travel"
+  },
+  {
+    "link": "http://kirpalsagaracademy.com/4050000000118.html",
+    "date": "Sep 5, 2015",
+    "title": "Teachers Day Celebration"
+  }
+]
+----
