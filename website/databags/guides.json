@@ -2,9 +2,9 @@
 	"content": [
 		{
 			"title": "Getting started",
-			"teaser": "Get and overview and taking the first steps",
+			"teaser": "Get an overview and take the first steps",
 			"icon": "fas fa-flag",
-			"file": "./getting-started"
+			"file": "./tutorials/getting-started/getting-started.html"
 		},
 		{
 			"title": "Python",

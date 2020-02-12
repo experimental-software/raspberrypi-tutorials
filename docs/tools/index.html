@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>{{ this.topic }} Tutorials</title>
+    <title>Tools Tutorials</title>
     <!-- Meta -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -40,7 +40,7 @@
 
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/index.html">Home</a></li>
-                    <li class="breadcrumb-item active">{{ this.topic }} Tutorials</li>
+                    <li class="breadcrumb-item active">Tools Tutorials</li>
                 </ol>
 
             </div><!--//container-->
@@ -53,7 +53,7 @@
                 <div class="doc-body row">
                     <div class="doc-content col-md-9 col-12 order-1">
                         <div class="content-inner">
-                            <h1 class="doc-title"><i class="icon {{ this.icon }}"></i> {{ this.topic }} Tutorials</h1>
+                            <h1 class="doc-title"><i class="icon fas fa-hammer"></i> Tools Tutorials</h1>
 
                             <table class="table">
                               <thead>
@@ -63,14 +63,14 @@
                                 </tr>
                               </thead>
                               <tbody>
-                                {% set count = namespace(value=1) %}
-                                {% for tutorial in bag( this.databag ).content %}
+                                
+                                
                                 <tr>
-                                  <th scope="row">{{ count.value }}</th>
-                                  <td><a href="{{ tutorial.link }}">{{ tutorial.title }}</a></td>
+                                  <th scope="row">1</th>
+                                  <td><a href="/tutorials/tools/vs-code.html">Visual Studio Code - a modern general purpose text editor</a></td>
                                 </tr>
-                                {% set count.value = count.value + 1 %}
-                                {% endfor %}
+                                
+                                
                               </tbody>
                             </table>
 

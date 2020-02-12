@@ -2,4 +2,8 @@ _model: topic
 ---
 _template: topic.html
 ---
-pageTitle: Python
+databag: python
+---
+topic: Python
+---
+icon: fab fa-python

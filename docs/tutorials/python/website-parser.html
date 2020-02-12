@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.10">
-<title>Architecture</title>
+<title>Parsing information from a website</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -435,169 +435,548 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 #footer-text{color:rgba(0,0,0,.6);font-size:.9em}}
 @media amzn-kf8{#header,#content,#footnotes,#footer{padding:0}}
 </style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
-<body class="article toc2 toc-left">
+<body class="article">
 <div id="header">
-<h1>Architecture</h1>
-<div id="toc" class="toc2">
-<div id="toctitle">Table of Contents</div>
-<ul class="sectlevel1">
-<li><a href="#_components">Components</a></li>
-<li><a href="#_deployment">Deployment</a></li>
-<li><a href="#_components_2">Components</a></li>
-<li><a href="#_deployment_2">Deployment</a></li>
-<li><a href="#_components_3">Components</a></li>
-<li><a href="#_deployment_3">Deployment</a></li>
-<li><a href="#_components_4">Components</a></li>
-<li><a href="#_deployment_4">Deployment</a></li>
-<li><a href="#_components_5">Components</a></li>
-<li><a href="#_deployment_5">Deployment</a></li>
-<li><a href="#_components_6">Components</a></li>
-<li><a href="#_deployment_6">Deployment</a></li>
-<li><a href="#_components_7">Components</a></li>
-<li><a href="#_deployment_7">Deployment</a></li>
-</ul>
-</div>
+<h1>Parsing information from a website</h1>
 </div>
 <div id="content">
-<div class="sect1">
-<h2 id="_components">Components</h2>
+<div id="preamble">
 <div class="sectionbody">
-<div class="paragraph">
-<p>The source code is in a single repository.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_deployment">Deployment</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>After the compilation of a JAR with this project, this JAR file can be packaged in a Docker image.
-This Docker image can then be published to Docker Hub.
-The production server can download it from there.
-With the help of Docker Swarm, the Docker container can be started.</p>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+With great power comes great responsibility. Respect the digital property of others.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_components_2">Components</h2>
+<h2 id="_introduction">Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The source code is in a single repository.</p>
+<p>Usually, websites are visited with the help of web browers.
+However, also computer programs can do the same.
+This is useful for data aggregation.
+One example where this is being used is for indexing websites in search engines.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_deployment_2">Deployment</h2>
+<h2 id="_dependencies">Dependencies</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>After the compilation of a JAR with this project, this JAR file can be packaged in a Docker image.
-This Docker image can then be published to Docker Hub.
-The production server can download it from there.
-With the help of Docker Swarm, the Docker container can be started.</p>
+<p>The following Python libraries need to be installed to be able to execute the code described below.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash">pip3 <span class="nb">install </span>beautifulsoup4
+pip3 <span class="nb">install </span>requests</code></pre>
+</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_components_3">Components</h2>
+<h2 id="_accessing_websites">Accessing websites</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The source code is in a single repository.</p>
+<p>The Python library <a href="https://requests.readthedocs.io/en/master/">Requests</a> makes it relatively easy to open websites with Python, like the user would normally do with the browser.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="c1"># Execute a HTTP GET request for the homepage of the Kirpal Sagar Academy
+</span><span class="o">&gt;&gt;&gt;</span> <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'http://kirpalsagaracademy.com/'</span><span class="p">)</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="c1"># Every HTTP response has a status code indicating success or failure <i class="conum" data-value="1"></i><b>(1)</b>
+</span><span class="o">&gt;&gt;&gt;</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span>
+<span class="mi">200</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="c1"># Response headers give hints how to interpret the data in the response body
+</span><span class="o">&gt;&gt;&gt;</span> <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s">'Content-Type'</span><span class="p">]</span>
+<span class="s">'text/html; charset=UTF-8'</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="c1"># Like this we can get access on the acutal source code of the website
+</span><span class="o">&gt;&gt;&gt;</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>See <a href="https://www.restapitutorial.com/httpstatuscodes.html" class="bare">https://www.restapitutorial.com/httpstatuscodes.html</a> for details</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_deployment_3">Deployment</h2>
+<h2 id="_parsing_html">Parsing HTML</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>After the compilation of a JAR with this project, this JAR file can be packaged in a Docker image.
-This Docker image can then be published to Docker Hub.
-The production server can download it from there.
-With the help of Docker Swarm, the Docker container can be started.</p>
+<p>The Python library <a href="https://www.crummy.com/software/BeautifulSoup/bs4/doc/">BeautifulSoup</a> makes is relatively easy to read in and decompose HTML documents.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="c1"># Create object which provides access on the HTML elements
+</span><span class="o">&gt;&gt;&gt;</span> <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="s">'html.parser'</span><span class="p">)</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="c1"># Get access on the text in the "title" element of the website
+</span><span class="o">&gt;&gt;&gt;</span> <span class="n">soup</span><span class="o">.</span><span class="n">title</span><span class="o">.</span><span class="n">text</span>
+<span class="s">'Kirpal Sagar Academy'</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="c1"># Get access on all anchor elements of the website
+</span><span class="o">&gt;&gt;&gt;</span> <span class="n">soup</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s">'a'</span><span class="p">)</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="c1"># Get access on the value of the "href" attribute of the fourth element
+</span><span class="o">&gt;&gt;&gt;</span> <span class="c1"># in the list of all anchors elements of the website
+</span><span class="o">&gt;&gt;&gt;</span> <span class="n">soup</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s">'a'</span><span class="p">)[</span><span class="mi">3</span><span class="p">][</span><span class="s">'href'</span><span class="p">]</span>
+<span class="s">'4040000000.html'</span></code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_css_selectors">CSS selectors</h3>
+<div class="paragraph">
+<p><a href="https://www.w3schools.com/cssref/css_selectors.asp">CSS selectors</a> are primarily used to instruct the web browsers for each and every HTML how the could display it, e.g. that all links in the navigation section should be displayed with a blue background color and with font size 12.
+However, they can also be used to locate elements from which we want to extract data.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">soup</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s">'div.marketing span'</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span> <i class="conum" data-value="1"></i><b>(1)</b>
+<span class="s">'Registration &amp; Admission Open'</span></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Get access on the text of the first element which will be addressed with a CSS selector for the "span" elements nested within "div" elements with the "class" attribute  "marketing".</td>
+</tr>
+</table>
+</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_components_4">Components</h2>
+<h2 id="_complete_example">Complete example</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The source code is in a single repository.</p>
+<p>So, now let us have a look at a script which makes use of the puzzle pieces described above.
+It will open the event overview page of the Kirpal Sagar Academy website and extract a summary of all the events listed there.</p>
+</div>
+<div class="listingblock">
+<div class="title">parse_ksa_events.py</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="n">EVENT_DETAILS_PAGE</span> <span class="o">=</span> <span class="s">'http://kirpalsagaracademy.com/4020000000.html'</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">EVENT_DETAILS_PAGE</span><span class="p">)</span>
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="s">'html.parser'</span><span class="p">)</span>
+<span class="n">raw_events</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s">'.main-event-div'</span><span class="p">)</span>
+
+<span class="n">events</span> <span class="o">=</span> <span class="p">[]</span> <i class="conum" data-value="1"></i><b>(1)</b>
+
+<span class="k">for</span> <span class="n">raw_event</span> <span class="ow">in</span> <span class="n">raw_events</span><span class="p">:</span>
+    <span class="n">ancestor_link</span> <span class="o">=</span> <span class="n">raw_event</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <i class="conum" data-value="2"></i><b>(2)</b>
+    <span class="n">event</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">"link"</span><span class="p">:</span> <span class="s">'http://kirpalsagaracademy.com/'</span> <span class="o">+</span> <span class="n">ancestor_link</span><span class="p">[</span><span class="s">'href'</span><span class="p">],</span>
+        <span class="s">"date"</span><span class="p">:</span> <span class="n">raw_event</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s">'.img-col span'</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">,</span>
+        <span class="s">"title"</span><span class="p">:</span> <span class="n">raw_event</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s">'.events-name'</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span>
+    <span class="p">}</span>
+    <span class="n">events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">events</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span> <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
 </div>
 </div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Here we collect the event details for later formatting and printing to the output device</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Another feature of BeautifulSoup is that it provides access on the parent of a HTML element, i.e. the element in which it is contained. And also the parent element of the parent element.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td><a href="https://en.wikipedia.org/wiki/JSON">JSON</a> is a common format in which one program passes data over to another</td>
+</tr>
+</table>
 </div>
-<div class="sect1">
-<h2 id="_deployment_4">Deployment</h2>
-<div class="sectionbody">
 <div class="paragraph">
-<p>After the compilation of a JAR with this project, this JAR file can be packaged in a Docker image.
-This Docker image can then be published to Docker Hub.
-The production server can download it from there.
-With the help of Docker Swarm, the Docker container can be started.</p>
+<p>This script can be called as any other Python script.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash">python3 parse_ksa_events.py</code></pre>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_components_5">Components</h2>
-<div class="sectionbody">
 <div class="paragraph">
-<p>The source code is in a single repository.</p>
+<p>With the data extracted from the website we could now create a new website which displays a tables with links to past events in the Kirpal Sagar Academy.</p>
 </div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="json"><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://kirpalsagaracademy.com/40500000003142.html"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"17-11-2019"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Annual Day Celebrations 2019"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://kirpalsagaracademy.com/40500000003021.html"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"25-10-2019"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Annual Sports Meet"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://kirpalsagaracademy.com/40500000003004.html"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"21-09-2019"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Cross country race"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://kirpalsagaracademy.com/40500000002997.html"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02-10-2019"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Gandhi Jayanti"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://kirpalsagaracademy.com/40500000002990.html"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"05-09-2019"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Teachers</span><span class="se">\u</span><span class="s2">2019 Day Celebrations"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://kirpalsagaracademy.com/40500000002975.html"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"18-05-2019"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"nvestiture Ceremony"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://kirpalsagaracademy.com/40500000002967.html"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"18-05-2019"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The Ballet is stronger than the Bullet"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://kirpalsagaracademy.com/40500000002772.html"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"22-04-2019"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The Earth Day 2019 Celebrations"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://kirpalsagaracademy.com/40500000001199.html"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"22/04/2018"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Report on Earth Day Celebrations @ Kirpal Sagar Academy"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://kirpalsagaracademy.com/40500000001062.html"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"05/08/2017"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Elocution Hindi"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://kirpalsagaracademy.com/40500000001041.html"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"01/08/2017"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"English Elocution VI </span><span class="se">\u</span><span class="s2">2013 VIII"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://kirpalsagaracademy.com/4050000000848.html"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"06/05/2017"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Inter- House Throw ball Tournament"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://kirpalsagaracademy.com/4050000000779.html"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"23/11/2016"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The Annual Athletic Meet"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://kirpalsagaracademy.com/4050000000738.html"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"19/08/2016"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"</span><span class="se">\u</span><span class="s2">2018ARPAN</span><span class="se">\u</span><span class="s2">2019 -  HOUSE SHOW, 2016"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://kirpalsagaracademy.com/4050000000706.html"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"27/07/2016"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Eco Club"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://kirpalsagaracademy.com/4050000000667.html"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"16/05/2016"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Investiture Ceremony"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://kirpalsagaracademy.com/4050000000624.html"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"22/04/2016"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Inter House Competition 2016-17"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://kirpalsagaracademy.com/4050000000623.html"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"22/04/2016"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"World Earth Day Celebration"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://kirpalsagaracademy.com/4050000000475.html"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"May 26, 2015"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FRESHERS' NIGHT 2015"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://kirpalsagaracademy.com/4050000000474.html"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Aug 15, 2015"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Independence Day Celebration 2015"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://kirpalsagaracademy.com/4050000000472.html"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Aug 24, 2015"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Story Telling Nursery-Grade-II"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://kirpalsagaracademy.com/4050000000471.html"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Aug 24, 2015"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Poetry Recitation (Hindi and English)"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://kirpalsagaracademy.com/4050000000400.html"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Oct 22, 2015"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Dussehra Celebrations"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://kirpalsagaracademy.com/4050000000117.html"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Oct 1, 2015"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Tour &amp; Travel"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://kirpalsagaracademy.com/4050000000118.html"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Sep 5, 2015"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Teachers Day Celebration"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span></code></pre>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_deployment_5">Deployment</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>After the compilation of a JAR with this project, this JAR file can be packaged in a Docker image.
-This Docker image can then be published to Docker Hub.
-The production server can download it from there.
-With the help of Docker Swarm, the Docker container can be started.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_components_6">Components</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The source code is in a single repository.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_deployment_6">Deployment</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>After the compilation of a JAR with this project, this JAR file can be packaged in a Docker image.
-This Docker image can then be published to Docker Hub.
-The production server can download it from there.
-With the help of Docker Swarm, the Docker container can be started.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_components_7">Components</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The source code is in a single repository.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_deployment_7">Deployment</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>After the compilation of a JAR with this project, this JAR file can be packaged in a Docker image.
-This Docker image can then be published to Docker Hub.
-The production server can download it from there.
-With the help of Docker Swarm, the Docker container can be started.</p>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-01-25 19:17:39 +0100
+Last updated 2020-02-01 21:01:10 +0100
 </div>
 </div>
+<style>
+pre.rouge table td { padding: 5px; }
+pre.rouge table pre { margin: 0; }
+pre.rouge .cm {
+  color: #999988;
+  font-style: italic;
+}
+pre.rouge .cp {
+  color: #999999;
+  font-weight: bold;
+}
+pre.rouge .c1 {
+  color: #999988;
+  font-style: italic;
+}
+pre.rouge .cs {
+  color: #999999;
+  font-weight: bold;
+  font-style: italic;
+}
+pre.rouge .c, pre.rouge .ch, pre.rouge .cd, pre.rouge .cpf {
+  color: #999988;
+  font-style: italic;
+}
+pre.rouge .err {
+  color: #a61717;
+  background-color: #e3d2d2;
+}
+pre.rouge .gd {
+  color: #000000;
+  background-color: #ffdddd;
+}
+pre.rouge .ge {
+  color: #000000;
+  font-style: italic;
+}
+pre.rouge .gr {
+  color: #aa0000;
+}
+pre.rouge .gh {
+  color: #999999;
+}
+pre.rouge .gi {
+  color: #000000;
+  background-color: #ddffdd;
+}
+pre.rouge .go {
+  color: #888888;
+}
+pre.rouge .gp {
+  color: #555555;
+}
+pre.rouge .gs {
+  font-weight: bold;
+}
+pre.rouge .gu {
+  color: #aaaaaa;
+}
+pre.rouge .gt {
+  color: #aa0000;
+}
+pre.rouge .kc {
+  color: #000000;
+  font-weight: bold;
+}
+pre.rouge .kd {
+  color: #000000;
+  font-weight: bold;
+}
+pre.rouge .kn {
+  color: #000000;
+  font-weight: bold;
+}
+pre.rouge .kp {
+  color: #000000;
+  font-weight: bold;
+}
+pre.rouge .kr {
+  color: #000000;
+  font-weight: bold;
+}
+pre.rouge .kt {
+  color: #445588;
+  font-weight: bold;
+}
+pre.rouge .k, pre.rouge .kv {
+  color: #000000;
+  font-weight: bold;
+}
+pre.rouge .mf {
+  color: #009999;
+}
+pre.rouge .mh {
+  color: #009999;
+}
+pre.rouge .il {
+  color: #009999;
+}
+pre.rouge .mi {
+  color: #009999;
+}
+pre.rouge .mo {
+  color: #009999;
+}
+pre.rouge .m, pre.rouge .mb, pre.rouge .mx {
+  color: #009999;
+}
+pre.rouge .sb {
+  color: #d14;
+}
+pre.rouge .sc {
+  color: #d14;
+}
+pre.rouge .sd {
+  color: #d14;
+}
+pre.rouge .s2 {
+  color: #d14;
+}
+pre.rouge .se {
+  color: #d14;
+}
+pre.rouge .sh {
+  color: #d14;
+}
+pre.rouge .si {
+  color: #d14;
+}
+pre.rouge .sx {
+  color: #d14;
+}
+pre.rouge .sr {
+  color: #009926;
+}
+pre.rouge .s1 {
+  color: #d14;
+}
+pre.rouge .ss {
+  color: #990073;
+}
+pre.rouge .s, pre.rouge .sa, pre.rouge .dl {
+  color: #d14;
+}
+pre.rouge .na {
+  color: #008080;
+}
+pre.rouge .bp {
+  color: #999999;
+}
+pre.rouge .nb {
+  color: #0086B3;
+}
+pre.rouge .nc {
+  color: #445588;
+  font-weight: bold;
+}
+pre.rouge .no {
+  color: #008080;
+}
+pre.rouge .nd {
+  color: #3c5d5d;
+  font-weight: bold;
+}
+pre.rouge .ni {
+  color: #800080;
+}
+pre.rouge .ne {
+  color: #990000;
+  font-weight: bold;
+}
+pre.rouge .nf, pre.rouge .fm {
+  color: #990000;
+  font-weight: bold;
+}
+pre.rouge .nl {
+  color: #990000;
+  font-weight: bold;
+}
+pre.rouge .nn {
+  color: #555555;
+}
+pre.rouge .nt {
+  color: #000080;
+}
+pre.rouge .vc {
+  color: #008080;
+}
+pre.rouge .vg {
+  color: #008080;
+}
+pre.rouge .vi {
+  color: #008080;
+}
+pre.rouge .nv, pre.rouge .vm {
+  color: #008080;
+}
+pre.rouge .ow {
+  color: #000000;
+  font-weight: bold;
+}
+pre.rouge .o {
+  color: #000000;
+  font-weight: bold;
+}
+pre.rouge .w {
+  color: #bbbbbb;
+}
+pre.rouge {
+  background-color: #f8f8f8;
+}
+</style>
 </body>
 </html>

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.10">
-<title>Wicket</title>
+<title>Installing Raspbian via Linux</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -438,38 +438,159 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article">
 <div id="header">
-<h1>Wicket</h1>
-<div id="toc" class="toc">
-<div id="toctitle">Table of Contents</div>
-<ul class="sectlevel1">
-<li><a href="#_wicket_tester">Wicket tester</a></li>
-<li><a href="#_base_class">Base class</a></li>
-</ul>
-</div>
+<h1>Installing Raspbian via Linux</h1>
 </div>
 <div id="content">
-<div class="sect1">
-<h2 id="_wicket_tester">Wicket tester</h2>
+<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>The Wicket framework provides a functionality with which it is possible to
-do test-driven development for pages and page components.</p>
+<p>This section contains a description for installing <a href="https://en.wikipedia.org/wiki/Raspbian">Rasbian</a> on a micro SD card using with a Linux computer, using the <a href="https://en.wikipedia.org/wiki/Command-line_interface">commandline interface</a>.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_base_class">Base class</h2>
+<h2 id="_download_rasbian">Download Rasbian</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>By extending the page components tests from a common base class, we don&#8217;t need
-to take care of things like the setup of a dummy Spring context in our tests.</p>
+<p>With the following <a href="https://tldr.ostera.io/curl"><code>curl</code></a> command you can download the latest Rasbian release into the "Downloads" of your home directory "~".
+The file size is around 3 <a href="https://en.wikipedia.org/wiki/Gigabyte">GB</a>, so you will need a good internet connection and some patience.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">curl --location https://downloads.raspberrypi.org/raspbian_full_latest &gt; ~/Downloads/raspbian-latest.zip</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Afterwards, the downloaded file needs to be unzipped.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">unzip ~/Downloads/raspbian-latest.zip -d /tmp
+mv /tmp/*-raspbian-*.img /tmp/raspbian-latest.img # <b class="conum">(1)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>With this <a href="https://tldr.ostera.io/mv"><code>mv</code></a> command the IMG file with the Raspian system will be renamed to a filename which doesn&#8217;t include its version number.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_locate_sd_card">Locate SD Card</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>After plugging in the SD card, you need to find out its device name.
+This can be done with the help of the <a href="https://www.howtoforge.com/linux-lsblk-command/"><code>lsblk</code></a> command.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">lsblk -p</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>One way to determine the correct device name is to find the value matching with the micro SD card in the "SIZE" column.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="img/device-name.png" alt="device name">
+</div>
+<div class="title">Figure 1. Example output for device overview</div>
+</div>
+<div class="paragraph">
+<p>Now you can store the correct device name in a variable which can the be used in the following steps.</p>
+</div>
+<div class="paragraph">
+<p>With the help of the <a href="https://tldr.ostera.io/grep"><code>grep</code></a> command you can double check that you have entered the correct value.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">lsblk -p | grep $DEVICE_NAME</code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="img/check-device-name.png" alt="check device name">
+</div>
+<div class="title">Figure 2. Example output for check if correct device name was selected</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">DEVICE_NAME=/dev/sdx</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_unmount_micro_sd_card">Unmount micro SD card</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If the device is <a href="https://www.bleepingcomputer.com/tutorials/introduction-to-mounting-filesystems-in-linux/">mounted</a> into your file system tree, you need to <a href="https://www.bleepingcomputer.com/tutorials/introduction-to-mounting-filesystems-in-linux/">unmount</a> it now with the <a href="https://tldr.ostera.io/umount"><code>umount</code></a> command.</p>
+</div>
+<div class="listingblock">
+<div class="title">Test test test</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">umount $DEVICE_NAME* # <b class="conum">(1)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>The asterisk after the variable is a <a href="http://tldp.org/LDP/GNU-Linux-Tools-Summary/html/x11655.htm">wildcard</a> character which will execute the command for all the partions on the device.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_copy_image_to_micro_sd_card">Copy image to micro SD card</h2>
+<div class="sectionbody">
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Warning</div>
+</td>
+<td class="content">
+The following step will overwrite all existing data on the target device. If you have entered a wrong value in the variable <code>DEVICE_NAME</code>, it may lead to a undesired data loss.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Finally, you can copy the Raspbian image on the micro SD card with the <a href="https://tldr.ostera.io/dd"><code>dd</code></a> command. This needs to be prefix with the <a href="https://tldr.ostera.io/sudo"><code>sudo</code></a> command to give <code>dd</code> the necessary permissions.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo dd bs=4M if=/tmp/raspbian-latest.img of=$DEVICE_NAME status=progress conv=fsync</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After this is done, you can unplug the micro SD card.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_resources">Resources</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://www.raspberrypi.org/documentation/installation/installing-images/README.md" class="bare">https://www.raspberrypi.org/documentation/installation/installing-images/README.md</a></p>
+</li>
+<li>
+<p><a href="https://www.raspberrypi.org/documentation/setup/" class="bare">https://www.raspberrypi.org/documentation/setup/</a></p>
+</li>
+</ul>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-01-25 19:18:20 +0100
+Last updated 2020-02-01 16:54:38 +0100
 </div>
 </div>
 </body>

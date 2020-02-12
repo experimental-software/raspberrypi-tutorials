@@ -1,0 +1,12 @@
+{
+	"content": [
+		{
+			"title": "Writing automated unit tests",
+			"link": "/tutorials/python/unit-testing.html"
+		},
+    {
+      "title": "Parsing information from a website",
+      "link": "/tutorials/python/website-parser.html"
+    }
+	]
+}
