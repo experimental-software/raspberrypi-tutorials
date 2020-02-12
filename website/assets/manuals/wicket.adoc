@@ -1,0 +1,12 @@
+= Wicket
+:toc:
+
+== Wicket tester
+
+The Wicket framework provides a functionality with which it is possible to
+do test-driven development for pages and page components.
+
+== Base class
+
+By extending the page components tests from a common base class, we don't need
+to take care of things like the setup of a dummy Spring context in our tests.

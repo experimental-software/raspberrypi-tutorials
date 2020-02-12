@@ -1,0 +1,12 @@
+_model: homepage
+---
+_template: homepage.html
+---
+pageTitle: Rasberry Pi Tutorials
+---
+tagline: Learning the basics of computer hardware and software
+---
+headline: Welcome!
+---
+introduction: The website contains tutorials for things which can be done with a Rasberry Pi.
+---

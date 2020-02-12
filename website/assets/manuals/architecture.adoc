@@ -1,0 +1,83 @@
+= Architecture
+:toc: left
+
+== Components
+
+The source code is in a single repository.
+
+== Deployment
+
+After the compilation of a JAR with this project, this JAR file can be packaged in a Docker image.
+This Docker image can then be published to Docker Hub.
+The production server can download it from there.
+With the help of Docker Swarm, the Docker container can be started.
+
+== Components
+
+The source code is in a single repository.
+
+== Deployment
+
+After the compilation of a JAR with this project, this JAR file can be packaged in a Docker image.
+This Docker image can then be published to Docker Hub.
+The production server can download it from there.
+With the help of Docker Swarm, the Docker container can be started.
+
+== Components
+
+The source code is in a single repository.
+
+== Deployment
+
+After the compilation of a JAR with this project, this JAR file can be packaged in a Docker image.
+This Docker image can then be published to Docker Hub.
+The production server can download it from there.
+With the help of Docker Swarm, the Docker container can be started.
+
+
+== Components
+
+The source code is in a single repository.
+
+== Deployment
+
+After the compilation of a JAR with this project, this JAR file can be packaged in a Docker image.
+This Docker image can then be published to Docker Hub.
+The production server can download it from there.
+With the help of Docker Swarm, the Docker container can be started.
+
+
+== Components
+
+The source code is in a single repository.
+
+== Deployment
+
+After the compilation of a JAR with this project, this JAR file can be packaged in a Docker image.
+This Docker image can then be published to Docker Hub.
+The production server can download it from there.
+With the help of Docker Swarm, the Docker container can be started.
+
+
+== Components
+
+The source code is in a single repository.
+
+== Deployment
+
+After the compilation of a JAR with this project, this JAR file can be packaged in a Docker image.
+This Docker image can then be published to Docker Hub.
+The production server can download it from there.
+With the help of Docker Swarm, the Docker container can be started.
+
+
+== Components
+
+The source code is in a single repository.
+
+== Deployment
+
+After the compilation of a JAR with this project, this JAR file can be packaged in a Docker image.
+This Docker image can then be published to Docker Hub.
+The production server can download it from there.
+With the help of Docker Swarm, the Docker container can be started.

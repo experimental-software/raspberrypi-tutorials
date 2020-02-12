@@ -1,8 +1,9 @@
 = Getting started
+:icons: font
 
-include::download-ubuntu.adocs[]
+include::download-ubuntu.adoc[leveloffset=1]
 
-include::download-windows.adocs[]
+include::download-windows.adoc[leveloffset=1]
 
 == Resources
 
