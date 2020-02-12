@@ -8,7 +8,7 @@ task compileWebsite(type: Exec) {
 
 task compileManuals(type: Exec) {
     executable "bash"
-    args "-c", "asciidoctor --destination-dir docs/ tutorials/**/*.adoc"
+    args "-c", "asciidoctor --destination-dir docs/tutorials tutorials/**/*.adoc"
 
     dependsOn compileWebsite
 }

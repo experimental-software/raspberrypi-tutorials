@@ -4,20 +4,19 @@
 			"title": "Getting started",
 			"teaser": "Get and overview and taking the first steps",
 			"icon": "fas fa-flag",
-			"file": "./manuals/architecture.html"
+			"file": "./getting-started"
 		},
 		{
 			"title": "Python",
 			"teaser": "Programming tips and tricks using the Python language",
 			"icon": "fab fa-python",
-			"file": "./manuals/wicket.html"
+			"file": "./python"
 		},
 		{
 			"title": "Tools",
 			"teaser": "Useful tools which can be installed on a Rasberry Pi",
 			"icon": "fas fa-hammer",
-			"file": "./manuals/javascript.html"
+			"file": "./tools"
 		}
-
 	]
 }
