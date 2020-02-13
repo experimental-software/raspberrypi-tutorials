@@ -2,13 +2,15 @@ task compileWebsite(type: Exec) {
     executable "bash"
     args "-c", '''
         cd website
-        lektor build --output-path ../docs --prune
+        lektor build --output-path ../build --prune
     '''
 }
 
 task compileManuals(type: Exec) {
     executable "bash"
-    args "-c", "asciidoctor --destination-dir docs/tutorials tutorials/**/*.adoc"
+    args "-c", '''
+        find . -name "*.adoc" | xargs -n 1 asciidoctor
+    '''
 
     dependsOn compileWebsite
 }
@@ -31,10 +33,7 @@ task publish(type: Exec) {
 
     executable "bash"
     args "-c", '''
-        git add .
-        git commit -m "Add new content"
-
-        git push upstream master
+        rsync -r build/ www.experimental-software.com@ssh.strato.de:raspberrypi-tutorials
     '''
 
     dependsOn build
@@ -55,5 +54,5 @@ task clean(type: Exec) {
     description = 'Delete the compiled website'
 
     executable "bash"
-    args "-c", "rm -r docs/"
+    args "-c", "rm -r build/"
 }
