@@ -2,11 +2,11 @@
 	"content": [
 		{
 			"title": "Writing automated unit tests",
-			"link": "https://experimental-software.github.io/raspberrypi-tutorials/tutorials/python/unit-testing.html"
+			"link": "/tutorials/python/unit-testing.html"
 		},
     {
       "title": "Parsing information from a website",
-      "link": "https://experimental-software.github.io/raspberrypi-tutorials/tutorials/python/website-parser.html"
+      "link": "/tutorials/python/website-parser.html"
     }
 	]
 }
